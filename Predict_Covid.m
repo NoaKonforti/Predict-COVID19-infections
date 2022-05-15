@@ -1,6 +1,6 @@
 % prediction of COVID-19 daily infections in Israel
 clear; close all; clc;
-%Dear examinner the function running time is about a minute long.
+
 
 %% Load data
 
@@ -10,8 +10,8 @@ raw_data = readtable('corona_new_cases.csv');
 
 n_days = 14;
 
-% TODO 1: look at the preprocessed data and understand the data 
-%       structure you will work with
+% look at the preprocessed data and understand the data 
+% structure you will work with
 X_all   = buffer(raw_data{:, 'New_verified_cases'}, n_days, n_days - 1);
 X_all   = X_all(:, n_days:(end - 1));
 Y0_all  = raw_data{(n_days + 1):end, 'New_verified_cases'}';
@@ -45,7 +45,7 @@ W = randn(n_hidden, n_input);
 J = randn(n_output, n_hidden);
 
 % Set an activation function for each layer
-%TODO 2: examin the activation functions code and understand their output
+% examin the activation functions code and understand their output
 g1 = @ReLU;
 g2 = @Linear;
 
@@ -71,18 +71,16 @@ for ep = 1:n_epochs
         y0  = Y0_train(s);
        
         % Forward pass
-        % NOTE: See the implementation of the defferent activation
-        %       functions before you inplement the forward pass. 
-        [h, hp] = g1(W*x);  % TODO 5: get the first layer value and derivative for 
+        [h, hp] = g1(W*x);  %  get the first layer value and derivative for 
                     %       the current example
-        [y, yp] = g2(J*h);  % TODO 5: get the output layer value and derivative for 
+        [y, yp] = g2(J*h);  %  get the output layer value and derivative for 
                     %      the current example
         
         % Backward pass
-        delta2 =(y-y0)*yp;      %TODO 6: calculate the delta for  the J weights 
-        dJ =(-eta*delta2*h)';      %TODO 6: implement the online update rule for J weights
-        delta1 = delta2*(J.*hp');   %TODO 6: calculate the delta for the W weights 
-        dW =-eta.*delta1'*x';    %TODO 6: implement the online update rule for W weights
+        delta2 =(y-y0)*yp;      % calculate the delta for  the J weights 
+        dJ =(-eta*delta2*h)';      % implement the online update rule for J weights
+        delta1 = delta2*(J.*hp');   % calculate the delta for the W weights 
+        dW =-eta.*delta1'*x';    % implement the online update rule for W weights
         
         % Update weights
         W = W + dW;
@@ -94,19 +92,19 @@ end
 
 %% Get output
 
-% TODO 7: Forward pass the whole training set (do not use loops!)
-h_train =g1(W*X_train); % TODO 7
-Y_train =g2(J*h_train); % TODO 7
+%  Forward pass the whole training set
+h_train =g1(W*X_train); 
+Y_train =g2(J*h_train); 
 
-% TODO 8: Forward pass the whole validation set (do not use loops!)
-h_valid = g1(W*X_valid);% TODO 8
-Y_valid = g2(J*h_valid);% TODO 8
+%  Forward pass the whole validation set
+h_valid = g1(W*X_valid);
+Y_valid = g2(J*h_valid);
 
 %% Print errors and R2
 
 % Squared errors
-train_err =mean(0.5*((Y_train-Y0_train).^2));%TODO 9: calculate the mean squared error for the training set
-valid_err =mean(0.5*((Y_valid-Y0_valid).^2));%TODO 9: calculate the mean squared error for the validation set
+train_err =mean(0.5*((Y_train-Y0_train).^2));% calculate the mean squared error for the training set
+valid_err =mean(0.5*((Y_valid-Y0_valid).^2));% calculate the mean squared error for the validation set
 
 fprintf('Training error:\t%g\nValidation error:\t%g\n', ...
     train_err, valid_err);
@@ -122,12 +120,12 @@ exp_Y0_valid = exp(Y0_valid);
 % R2
 train_R2 = corr(exp_Y_train', exp_Y0_train');
 valid_R2 = corr(exp_Y_valid', exp_Y0_valid');
-fprintf('Training R²:\t%g\nValidation R²:\t%g\n', ...
+fprintf('Training RÂ²:\t%g\nValidation RÂ²:\t%g\n', ...
     train_R2, valid_R2);
 
 %% Plot fit
 
-%TODO 10: plot the predicted values of the train and validation vs. the
+% plot the predicted values of the train and validation vs. the
 % true values. Use a scatter plot.  
 % 1. use differant colors for each set
 % 2. create a figure legend with the labels for each set
@@ -135,10 +133,6 @@ fprintf('Training R²:\t%g\nValidation R²:\t%g\n', ...
 hold on
 scatter(exp_Y0_train, exp_Y_train,'b','d');
 scatter(exp_Y0_valid, exp_Y_valid,'m','d');
-%hline = refline([1 0]);
-%hline.Color = 'k';
-%hline.LineStyle = '--';
-%hline.HandleVisibility = 'off';
 x_plot = linspace(0,max([exp_Y_train exp_Y0_train exp_Y0_valid exp_Y_valid]));
 y_plot = linspace(0,max([exp_Y_train exp_Y0_train exp_Y0_valid exp_Y_valid]));
 plot(x_plot,y_plot,'--k');
