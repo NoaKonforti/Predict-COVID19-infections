@@ -10,8 +10,6 @@ raw_data = readtable('corona_new_cases.csv');
 
 n_days = 14;
 
-% look at the preprocessed data and understand the data 
-% structure you will work with
 X_all   = buffer(raw_data{:, 'New_verified_cases'}, n_days, n_days - 1);
 X_all   = X_all(:, n_days:(end - 1));
 Y0_all  = raw_data{(n_days + 1):end, 'New_verified_cases'}';
@@ -51,8 +49,8 @@ g2 = @Linear;
 
 %% Declare the learning parameters
 
-eta      	= 0.0001 ; %TODO 3: Set Learning rate
-n_epochs    =30000; %TODO 4: Set Number of learning epochs
+eta      	= 0.0001 ; 
+n_epochs    =30000;
 
 %% Learn
 
@@ -77,7 +75,7 @@ for ep = 1:n_epochs
                     %      the current example
         
         % Backward pass
-        delta2 =(y-y0)*yp;      % calculate the delta for  the J weights 
+        delta2 =(y-y0)*yp;      % calculate the delta for the J weights 
         dJ =(-eta*delta2*h)';      % implement the online update rule for J weights
         delta1 = delta2*(J.*hp');   % calculate the delta for the W weights 
         dW =-eta.*delta1'*x';    % implement the online update rule for W weights
@@ -93,8 +91,8 @@ end
 %% Get output
 
 %  Forward pass the whole training set
-h_train =g1(W*X_train); 
-Y_train =g2(J*h_train); 
+h_train = g1(W*X_train); 
+Y_train = g2(J*h_train); 
 
 %  Forward pass the whole validation set
 h_valid = g1(W*X_valid);
